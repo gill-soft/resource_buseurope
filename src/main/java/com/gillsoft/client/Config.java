@@ -75,6 +75,14 @@ public class Config {
 	public static long getCacheStationsUpdateDelay() {
 		return Long.valueOf(properties.getProperty("cache.stations.update.delay"));
 	}
+	
+	public static long getCacheScheduleUpdateDelay() {
+		return Long.valueOf(properties.getProperty("cache.schedule.update.delay"));
+	}
+	
+	public static long getCacheScheduleTimeToLive() {
+		return Long.valueOf(properties.getProperty("cache.schedule.time.to.live"));
+	}
 
 	public static long getCacheErrorTimeToLive() {
 		return Long.valueOf(properties.getProperty("cache.error.time.to.live"));

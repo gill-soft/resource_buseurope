@@ -39,6 +39,8 @@ import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.apache.logging.log4j.core.util.datetime.FastDateFormat;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -68,10 +70,14 @@ import com.gillsoft.model.IdentificationDocumentType;
 import com.gillsoft.model.Lang;
 import com.gillsoft.model.Locality;
 import com.gillsoft.model.OrderXMLType;
+import com.gillsoft.model.Organisation;
 import com.gillsoft.model.Price;
 import com.gillsoft.model.RaceInfoXMLTypeArray;
 import com.gillsoft.model.RaceSeatXMLTypeArray;
+import com.gillsoft.model.Regularity;
 import com.gillsoft.model.RestError;
+import com.gillsoft.model.RoutePoint;
+import com.gillsoft.model.ScheduleRoute;
 import com.gillsoft.model.SearchStatXMLType;
 import com.gillsoft.model.Seat;
 import com.gillsoft.model.SeatStatus;
@@ -82,6 +88,7 @@ import com.gillsoft.model.StopXMLTypeArray;
 import com.gillsoft.model.SubAgentWebService;
 import com.gillsoft.model.SubAgentWebService_Service;
 import com.gillsoft.model.TicketXMLType;
+import com.gillsoft.model.response.ScheduleResponse;
 import com.gillsoft.util.RestTemplateUtil;
 import com.gillsoft.util.StringUtil;
 
@@ -91,6 +98,7 @@ public class RestClient {
 
 	public static final String STATIONS_CACHE_KEY = "buseurope.stations.";
 	public static final String TRIPS_CACHE_KEY = "buseurope.trips.";
+	public static final String SCHEDULE_CACHE_KEY = "buseurope.schedule.";
 
 	public static final String DATE_FORMAT_BIRTHDAY = "dd/MM/yyyy";
 	public static final FastDateFormat dateFormatBirthday = FastDateFormat.getInstance(DATE_FORMAT_BIRTHDAY);
@@ -183,6 +191,8 @@ public class RestClient {
 		params.put(RedisMemoryCache.IGNORE_AGE, true);
 		params.put(RedisMemoryCache.UPDATE_DELAY, Config.getCacheStationsUpdateDelay());
 		params.put(RedisMemoryCache.UPDATE_TASK, new UpdateTaskStations());
+		// load schedule
+		getCachedSchedule();
 		return (List<Entry<Locality, List<String>>>) cache.read(params);
 	}
 
@@ -210,19 +220,12 @@ public class RestClient {
 	      } catch (ServiceAppException_Exception e) {
 	    	  e.printStackTrace();
 	      }
-	      loadSchedule(localities);
+	      try {
+	    	  createSchedule(getCachedSchedule(), localities);
+	      } catch (Exception e) {
+	    	  e.printStackTrace();
+	      }
 	      return localities;
-	}
-	
-	public boolean loadSchedule(List<Entry<Locality, List<String>>> localities) {
-		try {
-			Channel channel = template.getForObject(Config.getUrlSchedule(), Channel.class);
-			createSchedule(channel, localities);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
 	}
 
 	private ConcurrentMap<String, FromToDates> createSchedule(Channel channel, List<Entry<Locality, List<String>>> localities) {
@@ -273,6 +276,126 @@ public class RestClient {
 			e.printStackTrace();
 		}
 		return DateUtils.truncate(time, Calendar.DATE);
+	}
+	
+	/****************** SCHEDULE *****************/
+	public Channel getCachedSchedule() throws IOCacheException {
+		Map<String, Object> params = new HashMap<>();
+		params.put(RedisMemoryCache.OBJECT_NAME, RestClient.SCHEDULE_CACHE_KEY);
+		params.put(RedisMemoryCache.IGNORE_AGE, true);
+		params.put(RedisMemoryCache.UPDATE_DELAY, Config.getCacheScheduleUpdateDelay());
+		params.put(RedisMemoryCache.UPDATE_TASK, new UpdateTaskSchedule());
+		return (Channel) cache.read(params);
+	}
+	
+	public Channel loadSchedule() {
+		try {
+			return template.getForObject(Config.getUrlSchedule(), Channel.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private String addScheduleCarrier(Channel.Group.Threads.Thread thread, ScheduleResponse scheduleResponse) {
+		if (scheduleResponse.getOrganisations() == null) {
+			scheduleResponse.setOrganisations(new HashMap<>());
+		}
+		String key = StringUtil.md5(thread.getCarrierTitle());
+		if (!scheduleResponse.getOrganisations().containsKey(key)) {
+			Organisation carrier = new Organisation(key);
+			carrier.setName(Lang.valueOf(thread.getLanguage()), thread.getCarrierTitle());
+			scheduleResponse.getOrganisations().put(key, carrier);
+		}
+		return key;
+	}
+
+	public void addScheduleRoute(List<Channel.Group.Threads.Thread> threads, ScheduleResponse scheduleResponse) {
+		threads.stream().forEach(thread -> {
+			FastDateFormat timeFormat = FastDateFormat.getInstance("HH:mm");
+			ScheduleRoute route = new ScheduleRoute();
+			Calendar time = Calendar.getInstance();
+			route.setName(Lang.valueOf(thread.getLanguage()), thread.getTitle());
+			route.setCarrier(new Organisation(addScheduleCarrier(thread, scheduleResponse)));
+			route.setStartedAt(getScheduleDateTime(thread.getSchedules().getSchedule().getPeriodStartDate(),
+					thread.getSchedules().getSchedule().getPeriodStartTime()));
+			route.setEndedAt(getScheduleDateTime(thread.getSchedules().getSchedule().getPeriodEndDate(),
+					thread.getSchedules().getSchedule().getPeriodEndTime()));
+			getScheduleRegularity(thread, route);
+			List<RoutePoint> path = new ArrayList<>();
+			Date[] departureTime = new Date[] { null };
+			try {
+				departureTime[0] = timeFormat.parse(thread.getSchedules().getSchedule().getTimes());
+			} catch (Exception e) {
+				e.printStackTrace();
+				return;
+			}
+			thread.getStoppoints().getStoppoint().stream().forEach(c -> {
+				RoutePoint point = new RoutePoint(String.valueOf(c.getStationCode()));
+				point.setLocality(new Locality(String.valueOf(c.getStationCode())));
+				if (c.getDepartureShift() != null) {
+					time.setTime(departureTime[0]);
+					time.add(Calendar.SECOND, c.getDepartureShift());
+					point.setDepartureTime(c.getDepartureShift() == 0 ? thread.getSchedules().getSchedule().getTimes()
+							: timeFormat.format(time.getTime()));
+				}
+				if (c.getArrivalShift() != null && (c.getDepartureShift() == null
+						|| (c.getDepartureShift() != null && c.getDepartureShift() != 0))) {
+					time.setTime(departureTime[0]);
+					time.add(Calendar.SECOND, c.getArrivalShift());
+					point.setArrivalTime(c.getArrivalShift() == 0 ? thread.getSchedules().getSchedule().getTimes()
+							: timeFormat.format(time.getTime()));
+				}
+				point.setArrivalDay(
+						Days.daysBetween(LocalDate.fromDateFields(departureTime[0]), LocalDate.fromDateFields(time.getTime()))
+						.getDays());
+				path.add(point);
+			});
+			route.setPath(path);
+			if (scheduleResponse.getRoutes() == null) {
+				scheduleResponse.setRoutes(new ArrayList<>());
+			}
+			scheduleResponse.getRoutes().add(route);
+		});
+	}
+
+	private void getScheduleRegularity(Channel.Group.Threads.Thread thread, ScheduleRoute route) {
+		String days = thread.getSchedules().getSchedule().getDays();
+		switch (days) {
+		case "1234567":
+			route.setRegularity(Regularity.EVERY_DAY);
+			break;
+		case "через день":
+			route.setRegularity(Regularity.DAY_BY_DAY);
+			break;
+		default:
+			if (days.replaceAll("\\d", "").isEmpty()) {
+				route.setRegularity(Regularity.DAYS_OF_THE_WEEK);
+				if (route.getRegularityDays() == null) {
+					route.setRegularityDays(new ArrayList<>());
+				}
+				if (days.length() == 1) {
+					route.setRegularityDays(Arrays.asList(Integer.parseInt(days)));
+				} else {
+					for (int i = 0; i < days.length(); i++) {
+						route.getRegularityDays().add(Character.getNumericValue(days.charAt(i)));
+					}
+				}
+			} else {
+				if (route.getAdditionals() == null) {
+					route.setAdditionals(new HashMap<>());
+				}
+				route.getAdditionals().put("REGULARITY",  days);
+			}
+		}
+	}
+
+	private Date getScheduleDateTime(String date, String time) {
+		try {
+			return StringUtil.fullDateFormat.parse(date + ' ' + time);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	/****************** SEATS ********************/
