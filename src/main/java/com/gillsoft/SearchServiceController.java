@@ -101,7 +101,7 @@ public class SearchServiceController extends SimpleAbstractTripSearchService<Tri
 		return simpleInitSearchResponse(cache, request);
 	}
 
-	@Override
+	/*@Override
 	public void addInitSearchCallables(List<Callable<TripPackage>> callables, TripSearchRequest request) {
 		callables.add(() -> {
 			try {
@@ -115,6 +115,28 @@ public class SearchServiceController extends SimpleAbstractTripSearchService<Tri
 				return tripPackage;
 			} catch (ResponseError e) {
 				TripPackage tripPackage = new TripPackage(request, e);
+				return tripPackage;
+			} catch (Exception e) {
+				return null;
+			}
+		});
+	}*/
+
+	@Override
+	public void addInitSearchCallables(List<Callable<TripPackage>> callables, String[] pair, Date date) {
+		callables.add(() -> {
+			try {
+				validateSearchParams(pair, date);
+				TripPackage tripPackage = client.getCachedTrips(pair[0], pair[1], date);
+				if (tripPackage == null) {
+					throw new ResponseError("Empty result");
+				}
+				tripPackage.setRequest(TripSearchRequest.createRequest(pair, date));
+				return tripPackage;
+			} catch (ResponseError e) {
+				TripPackage tripPackage = new TripPackage();
+				tripPackage.setError(e);
+				tripPackage.setRequest(TripSearchRequest.createRequest(pair, date));
 				return tripPackage;
 			} catch (Exception e) {
 				return null;

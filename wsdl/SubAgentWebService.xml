@@ -1,0 +1,1098 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="SubAgentWebService" targetNamespace="http://web.service.zont.fis.lv/" xmlns:ns1="http://jaxb.dev.java.net/array" xmlns:ns2="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://web.service.zont.fis.lv/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:types>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://web.service.zont.fis.lv/" xmlns:tns="http://web.service.zont.fis.lv/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:complexType name="searchStatXMLType">
+<xs:sequence>
+<xs:element name="searchId" type="xs:long"/>
+<xs:element name="checkCode" type="xs:int"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="orderXMLType">
+<xs:sequence>
+<xs:element minOccurs="0" name="id" type="xs:long"/>
+<xs:element minOccurs="0" name="paymentSum" type="xs:long"/>
+<xs:element minOccurs="0" name="payState" type="xs:string"/>
+<xs:element minOccurs="0" name="clientMail" type="xs:string"/>
+<xs:element minOccurs="0" name="clientPhone" type="xs:string"/>
+<xs:element minOccurs="0" name="clientIp" type="xs:string"/>
+<xs:element minOccurs="0" name="clientLang" type="xs:string"/>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="directTickets" nillable="true" type="tns:ticketXMLType"/>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="returnTickets" nillable="true" type="tns:ticketXMLType"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ticketXMLType">
+<xs:sequence>
+<xs:element minOccurs="0" name="seatNumber" type="xs:string"/>
+<xs:element minOccurs="0" name="ticketId" type="xs:long"/>
+<xs:element minOccurs="0" name="originalTicketId" type="xs:long"/>
+<xs:element minOccurs="0" name="amount" type="xs:long"/>
+<xs:element minOccurs="0" name="tsAgentAmount" type="xs:long"/>
+<xs:element minOccurs="0" name="commAmount" type="xs:long"/>
+<xs:element minOccurs="0" name="currencyCode" type="xs:string"/>
+<xs:element minOccurs="0" name="ticketNr" type="xs:string"/>
+<xs:element minOccurs="0" name="discountId" type="xs:string"/>
+<xs:element minOccurs="0" name="raceId" type="xs:long"/>
+<xs:element minOccurs="0" name="fromStopId" type="xs:long"/>
+<xs:element minOccurs="0" name="toStopId" type="xs:long"/>
+<xs:element minOccurs="0" name="saleId" type="xs:long"/>
+<xs:element minOccurs="0" name="passengerName" type="xs:string"/>
+<xs:element minOccurs="0" name="passengerDocNum" type="xs:string"/>
+<xs:element minOccurs="0" name="discountName" type="xs:string"/>
+<xs:element minOccurs="0" name="raceCode" type="xs:string"/>
+<xs:element minOccurs="0" name="platform" type="xs:string"/>
+<xs:element minOccurs="0" name="carrier" type="xs:string"/>
+<xs:element name="isBack" type="xs:boolean"/>
+<xs:element name="isInter" type="xs:boolean"/>
+<xs:element minOccurs="0" name="arrival" type="xs:dateTime"/>
+<xs:element minOccurs="0" name="departure" type="xs:dateTime"/>
+<xs:element minOccurs="0" name="arrivalString" type="xs:string"/>
+<xs:element minOccurs="0" name="departureString" type="xs:string"/>
+<xs:element minOccurs="0" name="originalAmount" type="xs:long"/>
+<xs:element minOccurs="0" name="extReportLink" type="xs:string"/>
+<xs:element minOccurs="0" name="passengerSurname" type="xs:string"/>
+<xs:element minOccurs="0" name="passengerMiddlename" type="xs:string"/>
+<xs:element minOccurs="0" name="passengerGender" type="xs:string"/>
+<xs:element minOccurs="0" name="passengerCitizenship" type="xs:string"/>
+<xs:element minOccurs="0" name="passengerBirthday" type="xs:string"/>
+<xs:element minOccurs="0" name="passengerBirthplace" type="xs:string"/>
+<xs:element minOccurs="0" name="passengerStreet" type="xs:string"/>
+<xs:element minOccurs="0" name="passengerZip" type="xs:string"/>
+<xs:element minOccurs="0" name="passengerCity" type="xs:string"/>
+<xs:element minOccurs="0" name="passengerDocSeries" type="xs:string"/>
+<xs:element minOccurs="0" name="passengerDocTypeExt" type="xs:string"/>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="docTypeExts" nillable="true" type="tns:docTypeExtXMLType"/>
+<xs:element minOccurs="0" name="commOwnerAmount" type="xs:long"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="docTypeExtXMLType">
+<xs:sequence>
+<xs:element minOccurs="0" name="code" type="xs:string"/>
+<xs:element minOccurs="0" name="name" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="raceDefStopXMLType">
+<xs:sequence>
+<xs:element name="stopId" type="xs:long"/>
+<xs:element minOccurs="0" name="extStopId" type="xs:string"/>
+<xs:element minOccurs="0" name="name" type="xs:string"/>
+<xs:element minOccurs="0" name="countryCode" type="xs:string"/>
+<xs:element minOccurs="0" name="arrivalAsStr" type="xs:string"/>
+<xs:element name="tariff" type="xs:int"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="raceSeatXMLType">
+<xs:sequence>
+<xs:element minOccurs="0" name="seatNumber" type="xs:string"/>
+<xs:element name="seat" type="xs:boolean"/>
+<xs:element minOccurs="0" name="seatName" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="buybackInfoXMLType">
+<xs:sequence>
+<xs:element minOccurs="0" name="amount" type="xs:long"/>
+<xs:element name="isAllOwnerOrder" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="raceInfoXMLType">
+<xs:sequence>
+<xs:element minOccurs="0" name="id" type="xs:long"/>
+<xs:element minOccurs="0" name="arrival" type="xs:dateTime"/>
+<xs:element minOccurs="0" name="departure" type="xs:dateTime"/>
+<xs:element minOccurs="0" name="arrivalString" type="xs:string"/>
+<xs:element minOccurs="0" name="departureString" type="xs:string"/>
+<xs:element minOccurs="0" name="carrier" type="xs:string"/>
+<xs:element minOccurs="0" name="route" type="xs:string"/>
+<xs:element minOccurs="0" name="platform" type="xs:string"/>
+<xs:element minOccurs="0" name="price" type="xs:long"/>
+<xs:element minOccurs="0" name="raceCode" type="xs:string"/>
+<xs:element minOccurs="0" name="freeSeats" type="xs:long"/>
+<xs:element minOccurs="0" name="isInter" type="xs:boolean"/>
+<xs:element minOccurs="0" name="isSale" type="xs:boolean"/>
+<xs:element minOccurs="0" name="fromStopId" type="xs:long"/>
+<xs:element minOccurs="0" name="toStopId" type="xs:long"/>
+<xs:element minOccurs="0" name="tsAgentAmount" type="xs:long"/>
+<xs:element minOccurs="0" name="commAmount" type="xs:long"/>
+<xs:element minOccurs="0" name="raceName" type="xs:string"/>
+<xs:element minOccurs="0" name="stationFrom" type="xs:string"/>
+<xs:element minOccurs="0" name="stationTo" type="xs:string"/>
+<xs:element minOccurs="0" name="registerURL" type="xs:string"/>
+<xs:element minOccurs="0" name="ticketMandatoryAttrs" type="xs:string"/>
+<xs:element minOccurs="0" name="addInfo" type="xs:string"/>
+<xs:element minOccurs="0" name="isTransfer" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="stopXMLType">
+<xs:sequence>
+<xs:element minOccurs="0" name="stopID" type="xs:long"/>
+<xs:element minOccurs="0" name="stopName" type="xs:string"/>
+<xs:element minOccurs="0" name="countryCode" type="xs:string"/>
+<xs:element minOccurs="0" name="stopExtName" type="xs:string"/>
+<xs:element minOccurs="0" name="stopExtParam" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="discountXMLType">
+<xs:sequence>
+<xs:element minOccurs="0" name="id" type="xs:string"/>
+<xs:element minOccurs="0" name="name" type="xs:string"/>
+<xs:element name="amount" type="xs:long"/>
+<xs:element name="percent" type="xs:long"/>
+<xs:element minOccurs="0" name="mandatoryNote" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType final="#all" name="raceDefStopXMLTypeArray">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="tns:raceDefStopXMLType"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType final="#all" name="raceSeatXMLTypeArray">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="tns:raceSeatXMLType"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType final="#all" name="raceInfoXMLTypeArray">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="tns:raceInfoXMLType"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType final="#all" name="stopXMLTypeArray">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="tns:stopXMLType"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType final="#all" name="ticketXMLTypeArray">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="tns:ticketXMLType"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType final="#all" name="discountXMLTypeArray">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="tns:discountXMLType"/>
+</xs:sequence>
+</xs:complexType>
+<xs:element name="ServiceAppException" type="tns:ServiceAppException"/>
+<xs:complexType name="ServiceAppException">
+<xs:sequence>
+<xs:element name="message" nillable="true" type="xs:string"/>
+<xs:element name="printStack" nillable="true" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+<xs:element name="AppException" type="tns:AppException"/>
+<xs:complexType name="AppException">
+<xs:sequence>
+<xs:element name="printStack" nillable="true" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>
+<xs:schema targetNamespace="http://jaxb.dev.java.net/array" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:complexType final="#all" name="base64BinaryArray">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="xs:base64Binary"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="getTicketPDF">
+    <wsdl:part name="orderId" type="xsd:long">
+    </wsdl:part>
+    <wsdl:part name="lang" type="xsd:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTicketsReturnedByOwners">
+  </wsdl:message>
+  <wsdl:message name="registerTicketsResponse">
+    <wsdl:part name="return" type="tns:orderXMLType">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="AppException">
+    <wsdl:part element="tns:AppException" name="AppException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="logoutResponse">
+  </wsdl:message>
+  <wsdl:message name="login">
+    <wsdl:part name="username" type="xsd:string">
+    </wsdl:part>
+    <wsdl:part name="password" type="xsd:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="applyDiscountResponse">
+    <wsdl:part name="return" type="tns:ticketXMLType">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getStopsResponse">
+    <wsdl:part name="return" type="tns:stopXMLTypeArray">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getStops">
+    <wsdl:part name="maxquantity" type="xsd:int">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getBuybackAgreementResponse">
+    <wsdl:part name="return" type="xsd:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="searchRoundTripRacesResponse">
+    <wsdl:part name="return" type="xsd:long">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="cancelReservation">
+    <wsdl:part name="saleId" type="xsd:long">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="searchRoundTripRaces">
+    <wsdl:part name="startStopId" type="xsd:long">
+    </wsdl:part>
+    <wsdl:part name="destStopId" type="xsd:long">
+    </wsdl:part>
+    <wsdl:part name="depDate" type="xsd:dateTime">
+    </wsdl:part>
+    <wsdl:part name="backDepDate" type="xsd:dateTime">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="buybackResponse">
+    <wsdl:part name="return" type="tns:buybackInfoXMLType">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="isLoggedIn">
+  </wsdl:message>
+  <wsdl:message name="getStopsAnothersResponse">
+    <wsdl:part name="return" type="tns:stopXMLTypeArray">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="reserveResponse">
+    <wsdl:part name="return" type="tns:orderXMLType">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="searchRoundTripRacesWithSearchStat">
+    <wsdl:part name="startStopId" type="xsd:long">
+    </wsdl:part>
+    <wsdl:part name="destStopId" type="xsd:long">
+    </wsdl:part>
+    <wsdl:part name="depDate" type="xsd:dateTime">
+    </wsdl:part>
+    <wsdl:part name="backDepDate" type="xsd:dateTime">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="reserve">
+    <wsdl:part name="saleXML" type="tns:orderXMLType">
+    </wsdl:part>
+    <wsdl:part name="contactEmail" type="xsd:string">
+    </wsdl:part>
+    <wsdl:part name="contactPhone" type="xsd:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="cancelReservationResponse">
+  </wsdl:message>
+  <wsdl:message name="getSupportEmailResponse">
+    <wsdl:part name="return" type="xsd:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getFoundRacesResponse">
+    <wsdl:part name="return" type="tns:raceInfoXMLTypeArray">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="startSale">
+    <wsdl:part name="fromStopId" type="xsd:long">
+    </wsdl:part>
+    <wsdl:part name="toStopId" type="xsd:long">
+    </wsdl:part>
+    <wsdl:part name="raceId" type="xsd:long">
+    </wsdl:part>
+    <wsdl:part name="departureDate" type="xsd:dateTime">
+    </wsdl:part>
+    <wsdl:part name="seatsCount" type="xsd:int">
+    </wsdl:part>
+    <wsdl:part name="remoteAddr" type="xsd:string">
+    </wsdl:part>
+    <wsdl:part name="lang" type="xsd:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSupportEmail">
+  </wsdl:message>
+  <wsdl:message name="searchRoundTripRacesWithSearchStatResponse">
+    <wsdl:part name="return" type="tns:searchStatXMLType">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getStopsAnothers">
+    <wsdl:part name="maxquantity" type="xsd:int">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getBuybackAgreement">
+    <wsdl:part name="ticketId" type="xsd:long">
+    </wsdl:part>
+    <wsdl:part name="lang" type="xsd:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="startRoundTripSaleResponse">
+    <wsdl:part name="return" type="tns:orderXMLType">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="calculateBuyback">
+    <wsdl:part name="ticketId" type="xsd:long">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getFoundRaces">
+    <wsdl:part name="searchId" type="xsd:long">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="buyback">
+    <wsdl:part name="ticketId" type="xsd:long">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRaceStopsResponse">
+    <wsdl:part name="return" type="tns:raceDefStopXMLTypeArray">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="isSearchCompleteResponse">
+    <wsdl:part name="return" type="xsd:boolean">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRaceFreeSeats">
+    <wsdl:part name="raceId" type="xsd:long">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ServiceAppException">
+    <wsdl:part element="tns:ServiceAppException" name="ServiceAppException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTicketsReturnedByOwnersResponse">
+    <wsdl:part name="return" type="tns:ticketXMLTypeArray">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="searchRaces">
+    <wsdl:part name="startStopId" type="xsd:long">
+    </wsdl:part>
+    <wsdl:part name="destStopId" type="xsd:long">
+    </wsdl:part>
+    <wsdl:part name="depDate" type="xsd:dateTime">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="registerTickets">
+    <wsdl:part name="saleId" type="xsd:long">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="searchRacesWithSearchStatResponse">
+    <wsdl:part name="return" type="tns:searchStatXMLType">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="searchRacesWithSearchStat">
+    <wsdl:part name="startStopId" type="xsd:long">
+    </wsdl:part>
+    <wsdl:part name="destStopId" type="xsd:long">
+    </wsdl:part>
+    <wsdl:part name="depDate" type="xsd:dateTime">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findOrderById">
+    <wsdl:part name="orderId" type="xsd:long">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSystemCurrencyResponse">
+    <wsdl:part name="return" type="xsd:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="startSaleResponse">
+    <wsdl:part name="return" type="tns:orderXMLType">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findOrderByIdResponse">
+    <wsdl:part name="return" type="tns:orderXMLType">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="startRoundTripSale">
+    <wsdl:part name="fromStopId" type="xsd:long">
+    </wsdl:part>
+    <wsdl:part name="toStopId" type="xsd:long">
+    </wsdl:part>
+    <wsdl:part name="raceId" type="xsd:long">
+    </wsdl:part>
+    <wsdl:part name="returnRaceId" type="xsd:long">
+    </wsdl:part>
+    <wsdl:part name="departureDate" type="xsd:dateTime">
+    </wsdl:part>
+    <wsdl:part name="departureBackDate" type="xsd:dateTime">
+    </wsdl:part>
+    <wsdl:part name="seatsCount" type="xsd:int">
+    </wsdl:part>
+    <wsdl:part name="remoteAddr" type="xsd:string">
+    </wsdl:part>
+    <wsdl:part name="lang" type="xsd:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="searchRacesResponse">
+    <wsdl:part name="return" type="xsd:long">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="processOwnerBuyback">
+    <wsdl:part name="ticketId" type="xsd:long">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getStopsExtSystemNamesResponse">
+    <wsdl:part name="return" type="tns:stopXMLTypeArray">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getDiscounts">
+    <wsdl:part name="raceId" type="xsd:long">
+    </wsdl:part>
+    <wsdl:part name="fromStopId" type="xsd:long">
+    </wsdl:part>
+    <wsdl:part name="toStopId" type="xsd:long">
+    </wsdl:part>
+    <wsdl:part name="lang" type="xsd:string">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="doLogout">
+  </wsdl:message>
+  <wsdl:message name="getDiscountsResponse">
+    <wsdl:part name="return" type="tns:discountXMLTypeArray">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="logout">
+  </wsdl:message>
+  <wsdl:message name="doLogoutResponse">
+    <wsdl:part name="return" type="xsd:boolean">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="processOwnerBuybackResponse">
+  </wsdl:message>
+  <wsdl:message name="getRaceFreeSeatsResponse">
+    <wsdl:part name="return" type="tns:raceSeatXMLTypeArray">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRaceStops">
+    <wsdl:part name="raceId" type="xsd:long">
+    </wsdl:part>
+    <wsdl:part name="fromStopId" type="xsd:long">
+    </wsdl:part>
+    <wsdl:part name="toStopId" type="xsd:long">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="applyDiscount">
+    <wsdl:part name="ticketXML" type="tns:ticketXMLType">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="isSearchComplete">
+    <wsdl:part name="searchStat" type="tns:searchStatXMLType">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="loginResponse">
+    <wsdl:part name="return" type="xsd:boolean">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="calculateBuybackResponse">
+    <wsdl:part name="return" type="tns:buybackInfoXMLType">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="isLoggedInResponse">
+    <wsdl:part name="return" type="xsd:boolean">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTicketPDFResponse">
+    <wsdl:part name="return" type="ns1:base64BinaryArray">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSystemCurrency">
+  </wsdl:message>
+  <wsdl:message name="getStopsExtSystemNames">
+    <wsdl:part name="maxquantity" type="xsd:int">
+    </wsdl:part>
+    <wsdl:part name="arg1" type="xsd:long">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="SubAgentWebService">
+    <wsdl:operation name="searchRoundTripRacesWithSearchStat">
+      <wsdl:input message="tns:searchRoundTripRacesWithSearchStat" name="searchRoundTripRacesWithSearchStat">
+    </wsdl:input>
+      <wsdl:output message="tns:searchRoundTripRacesWithSearchStatResponse" name="searchRoundTripRacesWithSearchStatResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ServiceAppException" name="ServiceAppException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="reserve">
+      <wsdl:input message="tns:reserve" name="reserve">
+    </wsdl:input>
+      <wsdl:output message="tns:reserveResponse" name="reserveResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ServiceAppException" name="ServiceAppException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="searchRoundTripRaces">
+      <wsdl:input message="tns:searchRoundTripRaces" name="searchRoundTripRaces">
+    </wsdl:input>
+      <wsdl:output message="tns:searchRoundTripRacesResponse" name="searchRoundTripRacesResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ServiceAppException" name="ServiceAppException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getTicketPDF">
+      <wsdl:input message="tns:getTicketPDF" name="getTicketPDF">
+    </wsdl:input>
+      <wsdl:output message="tns:getTicketPDFResponse" name="getTicketPDFResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ServiceAppException" name="ServiceAppException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="searchRaces">
+      <wsdl:input message="tns:searchRaces" name="searchRaces">
+    </wsdl:input>
+      <wsdl:output message="tns:searchRacesResponse" name="searchRacesResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ServiceAppException" name="ServiceAppException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="registerTickets">
+      <wsdl:input message="tns:registerTickets" name="registerTickets">
+    </wsdl:input>
+      <wsdl:output message="tns:registerTicketsResponse" name="registerTicketsResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ServiceAppException" name="ServiceAppException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="login">
+      <wsdl:input message="tns:login" name="login">
+    </wsdl:input>
+      <wsdl:output message="tns:loginResponse" name="loginResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRaceStops">
+      <wsdl:input message="tns:getRaceStops" name="getRaceStops">
+    </wsdl:input>
+      <wsdl:output message="tns:getRaceStopsResponse" name="getRaceStopsResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:AppException" name="AppException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getRaceFreeSeats">
+      <wsdl:input message="tns:getRaceFreeSeats" name="getRaceFreeSeats">
+    </wsdl:input>
+      <wsdl:output message="tns:getRaceFreeSeatsResponse" name="getRaceFreeSeatsResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ServiceAppException" name="ServiceAppException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getSystemCurrency">
+      <wsdl:input message="tns:getSystemCurrency" name="getSystemCurrency">
+    </wsdl:input>
+      <wsdl:output message="tns:getSystemCurrencyResponse" name="getSystemCurrencyResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="startSale">
+      <wsdl:input message="tns:startSale" name="startSale">
+    </wsdl:input>
+      <wsdl:output message="tns:startSaleResponse" name="startSaleResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ServiceAppException" name="ServiceAppException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="isSearchComplete">
+      <wsdl:input message="tns:isSearchComplete" name="isSearchComplete">
+    </wsdl:input>
+      <wsdl:output message="tns:isSearchCompleteResponse" name="isSearchCompleteResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBuybackAgreement">
+      <wsdl:input message="tns:getBuybackAgreement" name="getBuybackAgreement">
+    </wsdl:input>
+      <wsdl:output message="tns:getBuybackAgreementResponse" name="getBuybackAgreementResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ServiceAppException" name="ServiceAppException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="buyback">
+      <wsdl:input message="tns:buyback" name="buyback">
+    </wsdl:input>
+      <wsdl:output message="tns:buybackResponse" name="buybackResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ServiceAppException" name="ServiceAppException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getSupportEmail">
+      <wsdl:input message="tns:getSupportEmail" name="getSupportEmail">
+    </wsdl:input>
+      <wsdl:output message="tns:getSupportEmailResponse" name="getSupportEmailResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="applyDiscount">
+      <wsdl:input message="tns:applyDiscount" name="applyDiscount">
+    </wsdl:input>
+      <wsdl:output message="tns:applyDiscountResponse" name="applyDiscountResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ServiceAppException" name="ServiceAppException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getFoundRaces">
+      <wsdl:input message="tns:getFoundRaces" name="getFoundRaces">
+    </wsdl:input>
+      <wsdl:output message="tns:getFoundRacesResponse" name="getFoundRacesResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ServiceAppException" name="ServiceAppException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="processOwnerBuyback">
+      <wsdl:input message="tns:processOwnerBuyback" name="processOwnerBuyback">
+    </wsdl:input>
+      <wsdl:output message="tns:processOwnerBuybackResponse" name="processOwnerBuybackResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ServiceAppException" name="ServiceAppException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="logout">
+      <wsdl:input message="tns:logout" name="logout">
+    </wsdl:input>
+      <wsdl:output message="tns:logoutResponse" name="logoutResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="startRoundTripSale">
+      <wsdl:input message="tns:startRoundTripSale" name="startRoundTripSale">
+    </wsdl:input>
+      <wsdl:output message="tns:startRoundTripSaleResponse" name="startRoundTripSaleResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ServiceAppException" name="ServiceAppException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="calculateBuyback">
+      <wsdl:input message="tns:calculateBuyback" name="calculateBuyback">
+    </wsdl:input>
+      <wsdl:output message="tns:calculateBuybackResponse" name="calculateBuybackResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ServiceAppException" name="ServiceAppException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getStopsExtSystemNames">
+      <wsdl:input message="tns:getStopsExtSystemNames" name="getStopsExtSystemNames">
+    </wsdl:input>
+      <wsdl:output message="tns:getStopsExtSystemNamesResponse" name="getStopsExtSystemNamesResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ServiceAppException" name="ServiceAppException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getStops">
+      <wsdl:input message="tns:getStops" name="getStops">
+    </wsdl:input>
+      <wsdl:output message="tns:getStopsResponse" name="getStopsResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ServiceAppException" name="ServiceAppException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="doLogout">
+      <wsdl:input message="tns:doLogout" name="doLogout">
+    </wsdl:input>
+      <wsdl:output message="tns:doLogoutResponse" name="doLogoutResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findOrderById">
+      <wsdl:input message="tns:findOrderById" name="findOrderById">
+    </wsdl:input>
+      <wsdl:output message="tns:findOrderByIdResponse" name="findOrderByIdResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ServiceAppException" name="ServiceAppException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="cancelReservation">
+      <wsdl:input message="tns:cancelReservation" name="cancelReservation">
+    </wsdl:input>
+      <wsdl:output message="tns:cancelReservationResponse" name="cancelReservationResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ServiceAppException" name="ServiceAppException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getTicketsReturnedByOwners">
+      <wsdl:input message="tns:getTicketsReturnedByOwners" name="getTicketsReturnedByOwners">
+    </wsdl:input>
+      <wsdl:output message="tns:getTicketsReturnedByOwnersResponse" name="getTicketsReturnedByOwnersResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ServiceAppException" name="ServiceAppException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="searchRacesWithSearchStat">
+      <wsdl:input message="tns:searchRacesWithSearchStat" name="searchRacesWithSearchStat">
+    </wsdl:input>
+      <wsdl:output message="tns:searchRacesWithSearchStatResponse" name="searchRacesWithSearchStatResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ServiceAppException" name="ServiceAppException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getStopsAnothers">
+      <wsdl:input message="tns:getStopsAnothers" name="getStopsAnothers">
+    </wsdl:input>
+      <wsdl:output message="tns:getStopsAnothersResponse" name="getStopsAnothersResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ServiceAppException" name="ServiceAppException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="isLoggedIn">
+      <wsdl:input message="tns:isLoggedIn" name="isLoggedIn">
+    </wsdl:input>
+      <wsdl:output message="tns:isLoggedInResponse" name="isLoggedInResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDiscounts">
+      <wsdl:input message="tns:getDiscounts" name="getDiscounts">
+    </wsdl:input>
+      <wsdl:output message="tns:getDiscountsResponse" name="getDiscountsResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ServiceAppException" name="ServiceAppException">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SubAgentWebServiceSoapBinding" type="tns:SubAgentWebService">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="reserve">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="reserve">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="reserveResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceAppException">
+        <soap:fault name="ServiceAppException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="searchRoundTripRacesWithSearchStat">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="searchRoundTripRacesWithSearchStat">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="searchRoundTripRacesWithSearchStatResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceAppException">
+        <soap:fault name="ServiceAppException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getTicketPDF">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="getTicketPDF">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getTicketPDFResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceAppException">
+        <soap:fault name="ServiceAppException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="searchRoundTripRaces">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="searchRoundTripRaces">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="searchRoundTripRacesResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceAppException">
+        <soap:fault name="ServiceAppException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="searchRaces">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="searchRaces">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="searchRacesResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceAppException">
+        <soap:fault name="ServiceAppException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="registerTickets">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="registerTickets">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="registerTicketsResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceAppException">
+        <soap:fault name="ServiceAppException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getRaceStops">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="getRaceStops">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getRaceStopsResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AppException">
+        <soap:fault name="AppException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="login">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="login">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="loginResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRaceFreeSeats">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="getRaceFreeSeats">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getRaceFreeSeatsResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceAppException">
+        <soap:fault name="ServiceAppException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getSystemCurrency">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="getSystemCurrency">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getSystemCurrencyResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="isSearchComplete">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="isSearchComplete">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="isSearchCompleteResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="startSale">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="startSale">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="startSaleResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceAppException">
+        <soap:fault name="ServiceAppException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getBuybackAgreement">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="getBuybackAgreement">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getBuybackAgreementResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceAppException">
+        <soap:fault name="ServiceAppException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="buyback">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="buyback">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="buybackResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceAppException">
+        <soap:fault name="ServiceAppException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getSupportEmail">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="getSupportEmail">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getSupportEmailResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="applyDiscount">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="applyDiscount">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="applyDiscountResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceAppException">
+        <soap:fault name="ServiceAppException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getFoundRaces">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="getFoundRaces">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getFoundRacesResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceAppException">
+        <soap:fault name="ServiceAppException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="logout">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="logout">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="logoutResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="processOwnerBuyback">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="processOwnerBuyback">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="processOwnerBuybackResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceAppException">
+        <soap:fault name="ServiceAppException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="calculateBuyback">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="calculateBuyback">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="calculateBuybackResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceAppException">
+        <soap:fault name="ServiceAppException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="startRoundTripSale">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="startRoundTripSale">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="startRoundTripSaleResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceAppException">
+        <soap:fault name="ServiceAppException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getStops">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="getStops">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getStopsResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceAppException">
+        <soap:fault name="ServiceAppException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getStopsExtSystemNames">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="getStopsExtSystemNames">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getStopsExtSystemNamesResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceAppException">
+        <soap:fault name="ServiceAppException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="doLogout">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="doLogout">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="doLogoutResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findOrderById">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="findOrderById">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findOrderByIdResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceAppException">
+        <soap:fault name="ServiceAppException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="cancelReservation">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="cancelReservation">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="cancelReservationResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceAppException">
+        <soap:fault name="ServiceAppException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getTicketsReturnedByOwners">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="getTicketsReturnedByOwners">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getTicketsReturnedByOwnersResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceAppException">
+        <soap:fault name="ServiceAppException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getStopsAnothers">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="getStopsAnothers">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getStopsAnothersResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceAppException">
+        <soap:fault name="ServiceAppException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="searchRacesWithSearchStat">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="searchRacesWithSearchStat">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="searchRacesWithSearchStatResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceAppException">
+        <soap:fault name="ServiceAppException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="isLoggedIn">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="isLoggedIn">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="isLoggedInResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDiscounts">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="getDiscounts">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getDiscountsResponse">
+        <soap:body namespace="http://web.service.zont.fis.lv/" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceAppException">
+        <soap:fault name="ServiceAppException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SubAgentWebService">
+    <wsdl:port binding="tns:SubAgentWebServiceSoapBinding" name="SubAgentWebServicePort">
+      <soap:address location="https://demo3.busticketpro.com:443/wse/SubAgentWebService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

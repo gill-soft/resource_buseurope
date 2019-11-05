@@ -38,6 +38,8 @@ import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.util.datetime.FastDateFormat;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -96,6 +98,8 @@ import com.gillsoft.util.StringUtil;
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class RestClient {
 
+	private static Logger LOGGER = LogManager.getLogger(RestClient.class);
+
 	public static final String STATIONS_CACHE_KEY = "buseurope.stations.";
 	public static final String TRIPS_CACHE_KEY = "buseurope.trips.";
 	public static final String SCHEDULE_CACHE_KEY = "buseurope.schedule.";
@@ -145,7 +149,7 @@ public class RestClient {
 					policy.setReceiveTimeout(Config.getRequestTimeout());
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.error(e);
 			}
 			try {
 				RestClient.localIpAddress = InetAddress.getLocalHost().getHostAddress();
@@ -218,12 +222,12 @@ public class RestClient {
 	    		  }
 	    	  }
 	      } catch (ServiceAppException_Exception e) {
-	    	  e.printStackTrace();
+	    	  LOGGER.error(e);
 	      }
 	      try {
 	    	  createSchedule(getCachedSchedule(), localities);
 	      } catch (Exception e) {
-	    	  e.printStackTrace();
+	    	  LOGGER.error(e);
 	      }
 	      return localities;
 	}
@@ -273,7 +277,7 @@ public class RestClient {
 		try {
 			time.setTime(StringUtil.dateFormat.parse(date));
 		} catch (ParseException e) {
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 		return DateUtils.truncate(time, Calendar.DATE);
 	}
@@ -292,7 +296,7 @@ public class RestClient {
 		try {
 			return template.getForObject(Config.getUrlSchedule(), Channel.class);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 		return null;
 	}
@@ -327,7 +331,7 @@ public class RestClient {
 			try {
 				departureTime[0] = timeFormat.parse(thread.getSchedules().getSchedule().getTimes());
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.error(e);
 				return;
 			}
 			thread.getStoppoints().getStoppoint().stream().forEach(c -> {
@@ -407,7 +411,7 @@ public class RestClient {
 				raceSeat.getItem().stream().filter(f -> f.isSeat()).forEach(c -> seats.add(createSeat(c.getSeatNumber(), c.getSeatName())));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 		return seats;
 	}
@@ -448,7 +452,7 @@ public class RestClient {
 				calendar.setTime(key.getDate());
 				xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
 			} catch (DatatypeConfigurationException e) {
-				e.printStackTrace();
+				LOGGER.error(e);
 			}
 			SearchStatXMLType searchStat = port.searchRacesWithSearchStat(key.getCityStartInt(), key.getCityEndInt(), xmlDate);
 			int count = 10;
@@ -458,7 +462,7 @@ public class RestClient {
 			RaceInfoXMLTypeArray raceInfo = port.getFoundRaces(searchStat.getSearchId());
 			return new TripPackage(raceInfo == null ? null : raceInfo.getItem());
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e);
 			throw new ResponseError(e.getMessage(), e);
 		}
 	}
@@ -521,11 +525,14 @@ public class RestClient {
 						list = new ArrayList<>();
 						orderIdModel.getServices().put(order.getDirectTickets().get(0).getSaleId(), list);
 					}
-					mapEntry.getValue().stream().forEach(c -> c.getService().setConfirmed(true));
+					mapEntry.getValue().stream().forEach(model -> {
+						model.getService().setConfirmed(true);
+						model.getService().setId(String.valueOf(model.getTicketId()));
+					});
 					list.addAll(mapEntry.getValue());
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.error(e);
 				mapEntry.getValue().stream().forEach(c -> {
 					c.getService().setConfirmed(false);
 					c.getService().setError(new RestError(e.getMessage()));
